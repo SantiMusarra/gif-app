@@ -1,8 +1,6 @@
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-6">
-            Trending<i class="bi bi-arrow-up-right"></i>
-        </div>
+       
         <div class="col-6">
             <p class=" text-center">
                 Sort: <a href="#">oldest</a> - <a href="#">newest</a>              
@@ -13,7 +11,7 @@
     <div class="row">
         <div class="col">
             <div class="card-columns">
-                <app-gif-card *ngFor = "let gif of gifListToDisplay" [gifCard] = "gif"></app-gif-card>
+                <app-gif-card *ngFor = "let gif of gifSearchedList" [gifCard] = "gif"></app-gif-card>
             </div>
         </div>
     </div>

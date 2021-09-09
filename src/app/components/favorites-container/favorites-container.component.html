@@ -1,7 +1,9 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            This is favorites
+            <div class="card-columns">
+                <app-gif-card *ngFor = "let favoriteGif of favoriteGifList" [gifCard] = "favoriteGif"></app-gif-card>
+            </div>
         </div>
     </div>
 </div>

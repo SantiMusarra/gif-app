@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { GifManagerService } from 'src/app/services/gif-manager.service';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  query: string = '';
+
+  constructor(private gifManager: GifManagerService , private route: Router) { }
 
   ngOnInit(): void {
   }
 
+
+  onSearch(){
+
+    this.gifManager.getSearchedGifFromApi(this.query);
+    this.route.navigate(['/search' , this.query]);
+    this.query = '';
+
+  }
 }

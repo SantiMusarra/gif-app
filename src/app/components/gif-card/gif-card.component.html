@@ -1,8 +1,18 @@
-<div class="card d-inline-block">
-    <img src="http://i.stack.imgur.com/SBv4T.gif" class=" card-img-top">
-    <div class="card-img-overlay d-flex align-items-end p-0">
-        <a class=" stretched-link " routerLink = "gif-detail"></a>
-        <button type="button" class="btn ml-auto mb-2 mr-1" style="height: 35px; z-index: 999;"><i class=" bi bi-star"></i></button>
+<div class="card d-inline-block w-100">
+    <!-- <img [ngClass] = "!gifCard === undefined ? 'display': 'none'" src="{{  gifCard.image.gifPreviewUrl}}" class=" card-img-top">
+    <div *ngIf ="!gifCard === undefined" class="load-wraper">
+        <div class="activity"{'d-none': gifCard === undefined}></div> 
+    </div> [ngClass] = "gifCard ? '':'d-none'"-->
+    <img  src="{{gifCard.image.gifPreviewUrl}}" class=" card-img-top w-100" (load) = "onLoadComplete()" >     
+    <div [ngClass] = " { 'd-flex' : loadComplete}  " class="card-img-overlay  align-items-end p-0">
+        <div *ngIf = "!loadComplete" class="load-wraper w-100">
+                <div class="activity w-100"></div> 
+        </div>
+        <a class=" stretched-link " (click) = "onLoadGifDetail()"></a>
+        <button type="button" class="btn ml-auto mb-2 mr-1" style="height: 35px; z-index: 999;" (click)= "addToFavorites()">
+            <i *ngIf = "gifCard.isFavorite" class=" bi bi-star-fill text-warning"></i>
+            <i *ngIf = "!gifCard.isFavorite" class=" bi bi-star text-light"></i>
+        </button>
     </div>
    
 </div>

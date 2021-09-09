@@ -1,1 +1,30 @@
-<p>gif-detail works!</p>
+<div class="container">
+    <div class="row justify-content-start">
+        <div class="col-12">
+            <h5 class=" text-break">{{requestDone ? gifToDisplay.title: ""}}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <img class=" w-100" src="{{requestDone ? gifToDisplay.image.gifDetailUrl:'' }}">
+            <div *ngIf ="!requestDone" class="load-wraper">
+                <div class="activity"></div>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="button" class="btn ml-auto mb-2 " style="height: 35px; z-index: 999;" (click)= "addToFavorites()">
+               <i  *ngIf = "gifToDisplay.isFavorite " class=" bi bi-star-fill text-warning"></i>
+               <i  *ngIf = "!gifToDisplay.isFavorite" class=" bi bi-star"></i>
+            </button>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <p class=" text-break">Made by: {{ requestDone ? gifToDisplay.username: "" }}</p>
+            <p>Source: <a class=" text-break" href="{{requestDone ? gifToDisplay.source: ''}}">{{requestDone ? gifToDisplay.source: ""}}</a></p>
+            <p>Last updated: {{requestDone ? gifToDisplay.update_datetime: "" }}</p>
+        </div>
+    </div>
+
+</div>
