@@ -16,7 +16,7 @@
     <hr>
     <div class="row">
         <div class="col-12">
-            <p class=" text-break">Made by: {{ !requestDone ? gifToDisplay.username: 'Not Avaible' }}</p>
+            <p class=" text-break">Made by: {{ requestDone ? gifToDisplay.username: 'Not Avaible' }}</p>
             <p>Source: <a class=" text-break" href="{{requestDone ? gifToDisplay.source: ''}}">{{ requestDone ? gifToDisplay.source:'Not Avaible'}}</a></p>
             <p>Last updated: {{requestDone ? gifToDisplay.update_datetime: 'Not Avaible' }}</p>
         </div>

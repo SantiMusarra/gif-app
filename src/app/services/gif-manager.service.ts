@@ -137,7 +137,7 @@ export class GifManagerService {
       item = localStorage.getItem(key);
       let gif: Gif = JSON.parse(item);
       gif.isFavorite = true;
-      console.log(gif.id);
+      
       
       this.favoriteGifsMap.set(key,gif);
 

@@ -13,7 +13,7 @@ export class SearchListComponent implements OnInit {
   gifSearchedList: Gif[] = [];
 
   query:string = '';
-
+  @HostListener('touchmove', [])
   @HostListener("window:scroll", [])
   onScroll(): void {
       if ((window.innerHeight + window.scrollY) >= document.body.clientHeight) {
