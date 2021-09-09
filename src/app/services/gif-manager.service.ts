@@ -12,7 +12,7 @@ export class GifManagerService {
   gifSearchQueryList: Gif[] = [];
   favoriteGifs: Gif[] = [];
 
-  
+  favoriteGifsIndex: number = 1;
   
 
   api_key: string = 'uk0tYLnNtR0SlfEOF4lTEiPgWKWonlYZ';
@@ -120,22 +120,58 @@ export class GifManagerService {
   }
 
   //Methods to store the favorites  in the browser-local storage
-  setLocalData(){
+  setLocalData(gif: Gif){
 
-    localStorage.setItem('favorites', JSON.stringify(this.favoriteGifs))
-   
+    this.favoriteGifsIndex = this.favoriteGifs.length;
+    console.log(this.favoriteGifsIndex);
+    localStorage.setItem( 'favorites'+this.favoriteGifsIndex.toString(), JSON.stringify(gif)) //saving gif object
+    localStorage.setItem('favoritesIndex', JSON.stringify(this.favoriteGifsIndex)); //Saving counter
   }
 
   getLocalData(){
-
-    console.log(localStorage.getItem('favorites'));
+    let index: any = localStorage.getItem('favoritesIndex') ;
+    this.favoriteGifsIndex = JSON.parse(index);
     
+    let item: any;
+    
+    for (let i = 1; i < this.favoriteGifsIndex; i++) {
+     
+      item = localStorage.getItem('favorites'+i.toString());
+      let gif: Gif = JSON.parse(item);
+      
+      gif.isFavorite = true;
+      this.favoriteGifs.push(gif);
+    }
+  }
+
+  removeFromLocalData(gifToRemove : Gif){
+
+    let item: any;
+    for (let i = 1; i < this.favoriteGifsIndex; i++) {
+     
+      item = localStorage.getItem('favorites'+i.toString());
+      let gif: Gif = JSON.parse(item);
+      
+      if(gif.id === gifToRemove.id){
+        localStorage.removeItem('favorites'+i.toString());
+        break;
+      } 
+
+    }
+    
+    this.favoriteGifsIndex--;
+    localStorage.setItem('favoritesIndex', JSON.stringify(this.favoriteGifsIndex));
+  }
+
+  clearData(){
+    localStorage.clear();
   }
 
 
   addToFavorites(gifToAdd: Gif){
 
     this.favoriteGifs.push(gifToAdd);
+    this.setLocalData(gifToAdd);
   }
 
   removeFromFavorites(gifToRemove: Gif){
@@ -149,6 +185,7 @@ export class GifManagerService {
       } 
     }
     this.favoriteGifs.splice(indexToDelete,1);
+    this.removeFromLocalData(gifToRemove);
   }
 
 }

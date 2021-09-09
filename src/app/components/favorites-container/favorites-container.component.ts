@@ -16,6 +16,7 @@ export class FavoritesContainerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
   }
 
 }

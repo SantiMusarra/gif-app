@@ -40,15 +40,4 @@ export class GifDetailComponent implements OnInit {
     )
   }
   
-  
-  addToFavorites(){
-    if(!this.gifToDisplay.isFavorite){
-      this.gifManager.addToFavorites(this.gifToDisplay);
-      this.gifToDisplay.isFavorite = true;
-    }
-    else {
-      this.gifManager.removeFromFavorites(this.gifToDisplay);
-      this.gifToDisplay.isFavorite = false;
-    } 
-  }
 }
