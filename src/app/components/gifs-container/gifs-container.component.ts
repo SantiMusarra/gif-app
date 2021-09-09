@@ -9,7 +9,7 @@ import { GifManagerService } from 'src/app/services/gif-manager.service';
   styleUrls: ['./gifs-container.component.css']
 })
 export class GifsContainerComponent implements OnInit {
-
+  @HostListener('touchmove', [])
   @HostListener("window:scroll", [])
   onScroll(): void {
       if ((window.innerHeight + window.scrollY) >= document.body.clientHeight) {
@@ -25,14 +25,14 @@ export class GifsContainerComponent implements OnInit {
   ngOnInit(): void {
     //Caricare gif da giphy tramite service
     
-    this.gifListToDisplay = this.gifManager.gifList;
+    this.gifListToDisplay = this.gifManager.gifTrendingList;
   }
 
   
   onBottomReach(){
 
     this.gifManager.getTrendingGifFromApi();
-    console.log("Requesting another batch")
+   
   }
   
 

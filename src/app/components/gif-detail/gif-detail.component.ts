@@ -30,7 +30,7 @@ export class GifDetailComponent implements OnInit {
        
         this.gifManager.getGifByIdFromApi(params['id']).subscribe( (response) =>{
           
-          this.gifToDisplay = this.gifManager.fetchResponseById(response);
+          this.gifToDisplay = this.gifManager.castResponseToGif(response);
           
           this.requestDone = true;
         });

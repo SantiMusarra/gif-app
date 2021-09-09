@@ -8,12 +8,12 @@ import { Image } from '../models/image.model';
 })
 export class GifManagerService {
 
-  gifList: Gif[] = [];
+  gifTrendingList: Gif[] = [];
   gifSearchQueryList: Gif[] = [];
-  favoriteGifs: Gif[] = [];
+  favoriteGifsMap = new Map();
 
-  favoriteGifsIndex: number = 1;
   
+  _query:string = '';
 
   api_key: string = 'uk0tYLnNtR0SlfEOF4lTEiPgWKWonlYZ';
   limit: number = 20;
@@ -22,21 +22,21 @@ export class GifManagerService {
   
 
   constructor(private http: HttpClient) { 
-    
-    this.getTrendingGifFromApi();
+     
   }
 
   //Api calls
 
   getSearchedGifFromApi(query: string){
 
-    
+    if(this._query != query) this.gifSearchQueryList.length = 0;
+    this._query = query;
 
     let searchEndpointUrl: string = 'https://api.giphy.com/v1/gifs/search';
     let urlForRequest: string = searchEndpointUrl+'?api_key='+this.api_key+'&q='+query+'&limit='+this.limit.toString()+'&offset='+this.offsetSearch.toString();
     this.http.get<any>(urlForRequest).subscribe( (response ) => {
            
-      this.fetchResponse(response , true);
+      this.loadGifFromResponse(response , true);
     });
 
     this.offsetSearch += this.limit + 1;
@@ -49,24 +49,23 @@ export class GifManagerService {
     let urlForRequest: string = trendingEndpointUrl+'?api_key='+this.api_key+'&limit='+this.limit.toString()+'&offset='+this.offsetTrending; 
     this.http.get<any>(urlForRequest).subscribe( (response ) => {
       
-      this.fetchResponse(response , false);
+      this.loadGifFromResponse(response , false);
     });
     
     this.offsetTrending += this.limit + 1;
-    console.log(this.offsetTrending);
+    
   }
 
 
   getGifByIdFromApi(gifId: string) {
 
-    let api_key: string = 'uk0tYLnNtR0SlfEOF4lTEiPgWKWonlYZ';
     let gifByIdEndpointUrl: string = 'https://api.giphy.com/v1/gifs/'+gifId;
-    let urlForRequest: string = gifByIdEndpointUrl+'?api_key='+api_key;
+    let urlForRequest: string = gifByIdEndpointUrl+'?api_key='+this.api_key;
 
     return this.http.get<any>(urlForRequest);
   }
 
-  fetchResponseById(response: any ) : Gif{
+  castResponseToGif(response: any ) : Gif{
 
    
     let date: Date;
@@ -75,7 +74,7 @@ export class GifManagerService {
     date = new Date(response.data.import_datetime);
     dateString = date.toLocaleDateString("en-EN", { year: 'numeric', month: 'long', day: 'numeric' });
 
-    return new Gif(
+    let newGif = new Gif(
       response.data.id,
       response.data.url,
       response.data.username,
@@ -86,13 +85,13 @@ export class GifManagerService {
       new Image(response.data.images.fixed_height.webp , response.data.images.downsized.url)
       
     )
-    
-    
+    newGif.isFavorite = this.isFavorite(newGif);
+    return newGif;
   }
 
 
 
-  fetchResponse(response: any , isForSearch: boolean){
+  loadGifFromResponse(response: any , isForSearch: boolean){
     let newGif : Gif;
     let date: Date;
     let dateString: string;
@@ -113,79 +112,66 @@ export class GifManagerService {
           new Image(element.images.fixed_height.webp , element.images.downsized.url)
           
         )
+        newGif.isFavorite = this.isFavorite(newGif);
         if(isForSearch){
           this.gifSearchQueryList.push(newGif);
-        }else  this.gifList.push(newGif);
+        }else  this.gifTrendingList.push(newGif);
     });
   }
 
   //Methods to store the favorites  in the browser-local storage
   setLocalData(gif: Gif){
-
-    this.favoriteGifsIndex = this.favoriteGifs.length;
-    console.log(this.favoriteGifsIndex);
-    localStorage.setItem( 'favorites'+this.favoriteGifsIndex.toString(), JSON.stringify(gif)) //saving gif object
-    localStorage.setItem('favoritesIndex', JSON.stringify(this.favoriteGifsIndex)); //Saving counter
+  
+    localStorage.setItem( gif.id, JSON.stringify(gif)) //saving gif object
+    
   }
 
-  getLocalData(){
-    let index: any = localStorage.getItem('favoritesIndex') ;
-    this.favoriteGifsIndex = JSON.parse(index);
-    
-    let item: any;
-    
-    for (let i = 1; i < this.favoriteGifsIndex; i++) {
+  loadLocalData(){
      
-      item = localStorage.getItem('favorites'+i.toString());
+    let item: any;
+    let keys = Object.keys(localStorage)
+
+    for(let i = 0 ; i < keys.length ; i++){
+
+      let key: string = keys[i];
+      item = localStorage.getItem(key);
       let gif: Gif = JSON.parse(item);
-      
       gif.isFavorite = true;
-      this.favoriteGifs.push(gif);
+      console.log(gif.id);
+      
+      this.favoriteGifsMap.set(key,gif);
+
     }
+
   }
 
-  removeFromLocalData(gifToRemove : Gif){
+  removeFromLocalData(gifToRemoveId : string){
 
-    let item: any;
-    for (let i = 1; i < this.favoriteGifsIndex; i++) {
-     
-      item = localStorage.getItem('favorites'+i.toString());
-      let gif: Gif = JSON.parse(item);
-      
-      if(gif.id === gifToRemove.id){
-        localStorage.removeItem('favorites'+i.toString());
-        break;
-      } 
-
-    }
-    
-    this.favoriteGifsIndex--;
-    localStorage.setItem('favoritesIndex', JSON.stringify(this.favoriteGifsIndex));
+    localStorage.removeItem(gifToRemoveId);
+   
   }
 
   clearData(){
     localStorage.clear();
   }
 
+  //Favorite Operations
+
+  isFavorite(gif: Gif) :boolean{
+
+    return this.favoriteGifsMap.has(gif.id);
+  }
 
   addToFavorites(gifToAdd: Gif){
 
-    this.favoriteGifs.push(gifToAdd);
+    this.favoriteGifsMap.set(gifToAdd.id, gifToAdd);
     this.setLocalData(gifToAdd);
   }
 
   removeFromFavorites(gifToRemove: Gif){
 
-    let indexToDelete: number = 0 ;
-    for (let i = 0; i < this.favoriteGifs.length; i++) {
-        
-      if(gifToRemove.id === this.favoriteGifs[i].id){
-        indexToDelete = i;
-        break;
-      } 
-    }
-    this.favoriteGifs.splice(indexToDelete,1);
-    this.removeFromLocalData(gifToRemove);
+    this.removeFromLocalData(gifToRemove.id);
+    this.favoriteGifsMap.delete(gifToRemove.id);
   }
 
 }

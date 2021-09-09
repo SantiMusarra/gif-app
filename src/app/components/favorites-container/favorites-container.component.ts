@@ -12,7 +12,11 @@ export class FavoritesContainerComponent implements OnInit {
   favoriteGifList: Gif[] = [];  //Local reference of the service favoriteList list
 
   constructor(private gifManager: GifManagerService) { 
-    this.favoriteGifList = gifManager.favoriteGifs;
+    
+
+    for (let gif of gifManager.favoriteGifsMap.values()) {
+      this.favoriteGifList.push(gif);                //37 35 40
+  }
   }
 
   ngOnInit(): void {

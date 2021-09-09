@@ -6,8 +6,8 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <img class=" w-100" src="{{requestDone ? gifToDisplay.image.gifDetailUrl:'' }}">
-            <div *ngIf ="!requestDone" class="load-wraper">
+            <img [ngClass] = " { 'd-none' : !requestDone}" class=" w-100" src="{{requestDone ? gifToDisplay.image.gifDetailUrl:'' }}">
+            <div *ngIf ="!requestDone" class="load-wraper w-100">
                 <div class="activity"></div>
             </div>
         </div>
@@ -16,8 +16,8 @@
     <hr>
     <div class="row">
         <div class="col-12">
-            <p class=" text-break">Made by: {{ requestDone ? gifToDisplay.username: 'Not Avaible' }}</p>
-            <p>Source: <a class=" text-break" href="{{requestDone ? gifToDisplay.source: ''}}">{{requestDone ? gifToDisplay.source:'Not Avaible'}}</a></p>
+            <p class=" text-break">Made by: {{ !requestDone ? gifToDisplay.username: 'Not Avaible' }}</p>
+            <p>Source: <a class=" text-break" href="{{requestDone ? gifToDisplay.source: ''}}">{{ requestDone ? gifToDisplay.source:'Not Avaible'}}</a></p>
             <p>Last updated: {{requestDone ? gifToDisplay.update_datetime: 'Not Avaible' }}</p>
         </div>
     </div>

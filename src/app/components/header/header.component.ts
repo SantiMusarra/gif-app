@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
 
     this.gifManager.getSearchedGifFromApi(this.query);
     this.route.navigate(['/search' , this.query]);
-    this.query = '';
+    
 
   }
 }
