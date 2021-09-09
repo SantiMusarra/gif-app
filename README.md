@@ -1,5 +1,5 @@
 # GifApp
- This app display gifs taken from Giphy by calling the [Giphy REST Api](https://developers.giphy.com/docs/api#quick-start-guide) . This webapp let's you explore, search and mark as favorite the gifs that you like.
+ This WebApp displays gifs from Giphy by using the [Giphy REST Api](https://developers.giphy.com/docs/api#quick-start-guide) . This WebApp let's you explore, search and mark as favorite the gifs that you like.
  
 # Dependencies
 This app requires bootstrap 4.x and bootstrap-icon 1.5.0 for a better looking and responsive UI.
@@ -20,7 +20,7 @@ The app is divided among six component apart for the app component which is the 
 
 
 # Images
-![App Screenshot](src\img\gifAppScreenshot1.png)
+![App Screenshot](src/img/gifAppScreenshot1.png)
 
 # Try it out!
 
